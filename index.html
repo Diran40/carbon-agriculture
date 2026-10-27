@@ -45,7 +45,7 @@ a{color:#1f3a1d}
 <div class="w">
 <h1>Калькулятор карбонового земледелия</h1>
 <p class="sub">Костанайская область. Модель: Д = Pc · q · S − C. Суммы в долларах США.</p>
- 
+
 <div class="card">
 <h2>1. Площадь</h2>
 <label class="l" for="S">Площадь пашни, га</label>
@@ -54,27 +54,28 @@ a{color:#1f3a1d}
 <label class="l" for="sh">Какая доля площади переходит на карбоновое земледелие</label>
 <select id="sh"><option value="0.10">Год 1 — 10 %</option><option value="0.20">Год 2 — 20 %</option><option value="0.35">Год 3 — 35 %</option><option value="0.50">Год 4 — 50 %</option><option value="0.65" selected>Год 5 — 65 %</option><option value="1">Вся площадь — 100 %</option></select>
 </div>
- 
+
 <div class="card">
 <h2>2. Практики (ставка секвестрации q)</h2>
 <label class="pr" id="p0"><input type="checkbox" data-i="0"><span><b>Отказ от вспашки (no-till)</b><i>прямой посев, без многократной обработки</i></span><em>+0,7</em></label>
 <label class="pr" id="p1"><input type="checkbox" data-i="1"><span><b>Комплекс: стерня, отказ от чистого пара, органика</b><i>растительные остатки остаются на поле, компост</i></span><em>+0,5</em></label>
 <label class="pr" id="p2"><input type="checkbox" data-i="2"><span><b>Покровные культуры и сидераты</b><i>живые корни между сезонами</i></span><em>+0,6</em></label>
-<div class="hint">т CO₂ на га в год. Ступени взяты из модели работы: 0,7 → 1,2 → 1,8; каждая следующая включает предыдущую. Агролесоводство в модель не включено (в работе нет его оценки).</div>
+<div class="hint">т CO₂ на га в год. Ступени взяты из модели работы: 0,7 → 1,2 → 1,8; каждая следующая включает предыдущую.</div>
 <label class="l" for="q">Ставка q, т CO₂/га в год (можно изменить вручную)</label>
 <input id="q" type="number" step="any" value="1.2">
 </div>
- 
+
 <div class="card">
 <h2>3. Цена и издержки</h2>
 <label class="l" for="p">Цена 1 т CO₂ (Pc), $</label>
-<input id="p" type="number" step="any" value="20">
-<div class="row"><button onclick="setv('p',20)">20 — консервативная</button><button onclick="setv('p',50.8)">50,8 — прогноз</button><button onclick="setv('p',56)">56 — почвенные кредиты, Европа</button><button onclick="setv('p',60)">60 — США</button><button onclick="setv('p',6.9)">6,9 — средняя по рынку</button><button onclick="setv('p',1)">1 — КазСТВ</button></div>
+<input id="p" type="number" step="any" value="50.8">
+<div class="row"><button onclick="setv('p',50.8)">50,8 — прогноз (45 €)</button><button onclick="setv('p',56)">56 — Европа</button><button onclick="setv('p',60)">60 — США</button></div>
 <label class="l" for="c">Издержки на 1 га в год (C), $</label>
-<input id="c" type="number" step="any" value="65">
-<div class="row"><button onclick="setv('c',50)">50</button><button onclick="setv('c',80)">80</button></div>
+<input id="c" type="number" step="any" value="25">
+<div class="row"><button onclick="setv('c',10)">10 — только измерение и подтверждение</button><button onclick="setv('c',25)">25 — базовый сценарий</button><button onclick="setv('c',50)">50 — верхняя граница работы</button><button onclick="setv('c',80)">80 — худший сценарий работы</button></div>
+<div class="hint">10 — ориентир по литературе на измерение и подтверждение (≈ 3–8 $/га за цикл, без посредника и техники). 25 — допущение : измерение, обучение, администрирование. 50–80 — верхняя граница.</div>
 </div>
- 
+
 <div class="card">
 <h2>Результат за год</h2>
 <div class="res">
@@ -89,44 +90,46 @@ a{color:#1f3a1d}
 </div>
 <div id="bars" style="margin-top:14px"></div>
 </div>
-<p class="note">Оценка ориентировочная, не гарантия дохода. Для продажи кредитов нужны верификация и мониторинг, а фермер обычно получает долю цены. Курс: 452,59 ₸/$ (Нацбанк РК, 20.10.2026), используется только для строк «≈ ₸».</p>
- 
+<div class="card">
+<h2>Порог окупаемости при разных издержках</h2>
+<table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr style="text-align:left;color:#5c5c52"><th>Издержки</th><th>Нужная цена (C / q)</th><th>Текущая цена</th></tr></thead><tbody id="sens"></tbody></table>
+<div class="hint">Показывает, как сильно результат зависит от издержек: цена, при которой переход окупается, равна издержкам, делённым на ставку q.</div>
+</div>
+<p class="note">Оценка ориентировочная. Для продажи кредитов нужны верификация и мониторинг.</p>
+
 <details>
-<summary>Реальные цены на углерод, октябрь 2026</summary>
+<summary>Цены на почвенные кредиты, 2026</summary>
 <ul>
-<li><b>Почвенные кредиты, Европа:</b> сделка июня 2026 — около 50 € за т (≈ 56 $). Ориентир по рынку — 20–55 € за т.</li>
+<li><b>Европа:</b> сделка июня 2026 по верифицированным (Verra) почвенным кредитам — около 50 € за т (≈ 56 $). Ориентир по рынку — 20–55 €.</li>
 <li><b>США:</b> кредиты Indigo, по данным Reuters, обычно 60–80 $ за т.</li>
-<li><b>Квоты ЕС (обязательный рынок):</b> 82–88 € за т (≈ 92–98 $). Фермерам недоступны.</li>
-<li><b>Весь добровольный рынок:</b> средняя цена погашенных кредитов в 3 кв. 2026 — 6,9 $ за т.</li>
-<li><b>Казахстан, КазСТВ:</b> около 1 $ за т (≈ 450 ₸), квоты выдаются бесплатно. План 2021 года (рост до 50,8 $ в 2026–2030) не реализован.</li>
+<li><b>Проект НОУВ Казахстана:</b> 45 € за т на 2026–2030 годы (≈ 50,8 $).</li>
 </ul>
-<p class="note">Фермер получает не всю цену кредита: часть уходит на верификацию и посредников. Издержки 50–80 $/га — самое слабое допущение модели.</p>
+<p class="note">Фермер получает не всю цену кредита: часть уходит на верификацию и посредников.</p>
 </details>
- 
+
 <details>
 <summary>Какие данные использованы</summary>
 <ul>
 <li><b>Площадь 5,4 млн га:</b> посевная площадь Костанайской области (таблица 8 работы).</li>
 <li><b>q = 0,7 / 1,2 / 1,8 т CO₂/га в год:</b> международные оценки для степных условий, 0,2–0,5 т углерода на га × 3,67 (источник [32] работы).</li>
-<li><b>Цена 20 $:</b> средняя мировая цена углерода в 2026 году около 21 $ (Всемирный банк, [30]). <b>50,8 $:</b> план Правительства РК 2021 года ([31]), близок к цене европейских почвенных кредитов.</li>
-<li><b>Издержки 50–80 $/га:</b> верификация, мониторинг, обучение, переоснащение (международные данные, [33]).</li>
-<li><b>Охват 10 → 65 % за 5 лет:</b> допущение автора.</li>
+<li><b>Цена 50,8 $:</b> проект обновления ОНУВ Казахстана (45 € за т на 2026–2030). <b>56 $:</b> почвенные кредиты в Европе (июнь 2026). <b>60 $:</b> нижняя граница цен кредитов США (Indigo).</li>
+<li><b>Издержки:</b> сценарии 10 / 25 / 50 / 80 $/га. 10 — ориентир по литературе на измерение и подтверждение (≈ 3–8 $/га). 25 — допущение. 50–80 — консервативная верхняя граница.</li>
+<li><b>Охват 10 → 65 % за 5 лет:</b></li>
 </ul>
-<p class="note">Это модельный потенциал при допущениях, а не прогноз. Ставка q взята из литературы и не измерена в области.</p>
 </details>
- 
+
 <details>
 <summary>Источники цен</summary>
 <ul>
-<li><a href="https://www.spglobal.com/energy/en/news-research/latest-news/natural-gas/100526-european-carbon-prices-drop-to-7-week-low-as-market-eyes-upcoming-policy-agenda" target="_blank" rel="noopener">S&amp;P Global, 5.10.2026 — квоты ЕС</a></li>
-<li><a href="https://gmk.center/en/news/european-carbon-prices-rose-to-e88-t-in-october/amp/" target="_blank" rel="noopener">GMK Center, октябрь 2026 — квоты ЕС</a></li>
-<li><a href="https://carboncredits.com/?p=48361" target="_blank" rel="noopener">carboncredits.com — почвенные кредиты в Европе, средняя цена 3 кв. 2026</a></li>
+<li><a href="https://forbes.kz/articles/klimat_1" target="_blank" rel="noopener">Forbes.kz — проект ОНУВ, цена 45 € на 2026–2030</a></li>
+<li><a href="https://carboncredits.com/?p=48361" target="_blank" rel="noopener">carboncredits.com — почвенные кредиты в Европе</a></li>
 <li><a href="https://www.senken.io/carbon-removal/soil-carbon" target="_blank" rel="noopener">Senken — цены на почвенные кредиты, Indigo (по Reuters)</a></li>
-<li><a href="https://icapcarbonaction.com/en/compare/46" target="_blank" rel="noopener">ICAP — КазСТВ</a></li>
+<li><a href="https://grainswest.com/2024/03/carbon-assets-made-easy/" target="_blank" rel="noopener">CANZA (Канада) — анализ образцов ≈ 3,30 $ за акр</a></li>
+<li><a href="https://research.qut.edu.au/cab/?p=4521" target="_blank" rel="noopener">QUT (Австралия) — цель мониторинга ≈ 3 $/га в год</a></li>
 </ul>
 </details>
 </div>
- 
+
 <script>
 var $=function(i){return document.getElementById(i)};
 var INC=[0.7,0.5,0.6],NAMES=['Отказ от вспашки','Комплекс практик','Покровные и сидераты'],SH=[.10,.20,.35,.50,.65],RATE=452.59;
@@ -152,6 +155,7 @@ function calc(){
  var b=$('oB');b.textContent=N>=0?'Окупается':'Не окупается';b.className='badge '+(N>=0?'ok':'no');
  $('oH').textContent=f(p*q,0)+' − '+f(c,0)+' = '+f(p*q-c,0)+' $/га';
  $('oE').textContent=q>0?f(c/q,1)+' $/т':'—';
+ var rows='';[10,25,50,80].forEach(function(ci){var be=q>0?ci/q:0;var ok=q>0&&p>=be;rows+='<tr style="border-top:1px solid #dad9cc"><td style="padding:6px 0">'+ci+' $/га</td><td>'+f(be,1)+' $/т</td><td style="color:'+(ok?'#2e7d32':'#b3402a')+'">'+(ok?'покрывает':'не покрывает')+'</td></tr>'});$('sens').innerHTML=rows;
  var s5=0;SH.forEach(function(x){s5+=S*x*(q*p-c)});$('o5').textContent=money(s5);
  var h='';boxes.forEach(function(bx,i){if(bx.checked&&!manual){var ti=A*INC[i];h+='<div class="bar"><span style="width:150px">'+NAMES[i]+'</span><div style="width:'+(q>0?Math.round(INC[i]/q*100):0)+'%"></div><span>'+tons(ti)+'</span></div>'}});
  $('bars').innerHTML=h?'<div class="k">CO₂ по практикам, за год</div>'+h:'';
@@ -163,4 +167,3 @@ calc();
 </script>
 </body>
 </html>
- 
